@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
             let chatArray=[];
             chatArray.push({title: chatTitle, query, answer: answer.data.answer});
             await new Chat({date, userId, chats: chatArray}).save();
-            res.send({message: "successfully inserted first data"});
+            res.send({message: "successfully inserted first data", answer: answer.data.answer});
             return;
         }
         console.log(answer.data.answer);
