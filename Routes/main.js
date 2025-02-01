@@ -34,8 +34,8 @@ router.post('/', async (req, res) => {
             return;
         }
         console.log(answer.data.answer);
-        // chat.chats.unshift({title: chatTitle, query, answer: answer});
-        // await chat.save();
+        chat.chats.unshift({title: chatTitle, query, answer: answer.data.answer});
+        await chat.save();
         res.send({message: "successfull", answer: answer.data.answer });
     } catch (error) {
         console.log(error);
