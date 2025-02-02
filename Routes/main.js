@@ -4,6 +4,8 @@ const {Chat} = require('../DB/chat');
 const axios = require('axios')
 require('dotenv').config();
 
+const Py_Backend_Url = process.env.PY_BACKEND_URL;
+
 router.post('/', async (req, res) => {
     try {
         console.log("in req")
@@ -16,12 +18,11 @@ router.post('/', async (req, res) => {
         }
         console.log("before answer")
         const answer = await axios.post(
-            'https://e-summit-qpoz.onrender.com/chat',
+            `${Py_Backend_Url}/chat`,
             // 'https://surch-backend.onrender.com/inference',
             // 'http://127.0.0.1:8000/inference',
             {
             user_input:query,
-            // api_key:process.env.API_KEY
         });
         console.log("after answer");
         const chat = await Chat.findOne({date, userId});
@@ -40,6 +41,29 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.send({message: "internal server error"})
+    }
+})
+
+router.get('/init', async(req, res) => {
+    let answer = null; 
+    try{
+        while(!answer){
+
+            console.log("before answer")
+            answer = await axios.post(
+                `${Py_Backend_Url}/chat`,
+                // 'https://surch-backend.onrender.com/inference',
+                // 'http://127.0.0.1:8000/inference',
+                {
+                user_input:"Hey",
+            });
+            console.log("after answer");
+        }
+        res.send({message: "cold start successfull" });
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).send({message: "internal server error"})
     }
 })
 
